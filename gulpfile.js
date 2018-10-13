@@ -7,6 +7,7 @@ const uglifyCss = require('gulp-uglifycss');
 const sourceMaps = require('gulp-sourcemaps');
 const imageMin = require('gulp-imagemin');
 const del = require('del');
+const runSequence = require('run-sequence');
 
 //This task initializes the js sourcemaps and concatenates the js files
 gulp.task('concatScripts', () => {
@@ -30,21 +31,21 @@ gulp.task('compileSass', () => {
     return gulp.src('sass/global.scss')
                .pipe(sourceMaps.init())
                .pipe(sass())
-               .pipe(rename('all.css'))
+               .pipe(rename('global.css'))
                .pipe(sourceMaps.write('../dist/styles'))
                .pipe(gulp.dest('css'))
 })
 
 //Minifies the css files
 gulp.task('styles', ['compileSass'], () => {
-    return gulp.src('css/all.css')
+    return gulp.src('css/global.css')
                .pipe(uglifyCss())
                .pipe(rename('all.min.css'))
                .pipe(gulp.dest('dist/styles'))
 })
 
 //Minifies the image files
-gulp.task('minifyImages', () => {
+gulp.task('images', () => {
     return gulp.src('images/*')
                .pipe(imageMin())
                .pipe(gulp.dest('dist/content'))
@@ -54,6 +55,26 @@ gulp.task('minifyImages', () => {
 gulp.task('clean', () => {
     del('dist/**')
 })
+
+//Generates all the needed content in the dist folder - css, js, images
+gulp.task('generateDistContent', ['scripts', 'styles', 'images'], () => {
+    return gulp.src(['index.html', 'icons/**'], {base: './'})
+               .pipe(gulp.dest('dist'));
+});
+
+
+
+//First executes the clean task, and then the generateDistContent task
+gulp.task('build', () => {
+    runSequence('clean'
+                , 'generateDistContent');
+})
+
+
+
+
+
+
 
 
 
