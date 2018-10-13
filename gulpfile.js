@@ -6,6 +6,7 @@ const sass = require('gulp-sass');
 const uglifyCss = require('gulp-uglifycss');
 const sourceMaps = require('gulp-sourcemaps');
 const imageMin = require('gulp-imagemin');
+const del = require('del');
 
 //This task initializes the js sourcemaps and concatenates the js files
 gulp.task('concatScripts', () => {
@@ -43,12 +44,18 @@ gulp.task('styles', ['compileSass'], () => {
 })
 
 //Minifies the image files
-
 gulp.task('minifyImages', () => {
     return gulp.src('images/*')
                .pipe(imageMin())
-               .pipe(gulp.dest('dist/images'))
+               .pipe(gulp.dest('dist/content'))
 })
+
+//Deletes the dist folder
+gulp.task('clean', () => {
+    del('dist/**')
+})
+
+
 
 
 
