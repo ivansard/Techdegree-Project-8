@@ -8,19 +8,20 @@ const sourceMaps = require('gulp-sourcemaps');
 const imageMin = require('gulp-imagemin');
 const del = require('del');
 const runSequence = require('run-sequence');
+const webserver = require('gulp-webserver');
 
 //This task initializes the js sourcemaps and concatenates the js files
 gulp.task('concatScripts', () => {
-    return gulp.src(['js/*.js', 'js/circle/*.js'])
+    return gulp.src('js/circle/*.js')
                .pipe(sourceMaps.init())
-               .pipe(concat('all.js'))
+               .pipe(concat('global.js'))
                .pipe(sourceMaps.write('../dist/scripts'))
                .pipe(gulp.dest('js'))
 })
 
 //Minifies the js files
 gulp.task('scripts', ['concatScripts'], () => {
-     return gulp.src('js/all.js')
+     return gulp.src('js/global.js')
                 .pipe(uglify())
                 .pipe(rename('all.min.js'))
                 .pipe(gulp.dest('dist/scripts'))
@@ -46,14 +47,14 @@ gulp.task('styles', ['compileSass'], () => {
 
 //Minifies the image files
 gulp.task('images', () => {
-    return gulp.src('images/*')
+    return gulp.src(['images/*', 'icons/*'])
                .pipe(imageMin())
                .pipe(gulp.dest('dist/content'))
 })
 
 //Deletes the dist folder
 gulp.task('clean', () => {
-    del('dist/**')
+    return del('dist/**')
 })
 
 //Generates all the needed content in the dist folder - css, js, images
@@ -62,21 +63,25 @@ gulp.task('generateDistContent', ['scripts', 'styles', 'images'], () => {
                .pipe(gulp.dest('dist'));
 });
 
-
-
 //First executes the clean task, and then the generateDistContent task
 gulp.task('build', () => {
-    runSequence('clean'
+    return runSequence('clean'
                 , 'generateDistContent');
 })
 
+gulp.task('startServer', () => {
+    return gulp.src('../dist')
+        .pipe(webserver({
+            livereload: true,
+            host: 'localhost',
+            port: 3000,
+            open: true,
+            fallback: 'index.html'
+        }))
+})
 
+//Default task, which additionally creates a web-server
 
-
-
-
-
-
-
-
-
+gulp.task('default', ['build'], () => {
+    gulp.start('startServer');
+})

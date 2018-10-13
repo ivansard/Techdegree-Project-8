@@ -18,7 +18,7 @@
   "homepage": "https://github.com/ivansard/Techdegree-Project-8#readme",
   "devDependencies": {
     "del": "^3.0.0",
-    "gulp": "^3.9.1",
+    "gulp": "^3.9.0",
     "gulp-concat": "^2.6.1",
     "gulp-imagemin": "^4.1.0",
     "gulp-rename": "^1.4.0",
@@ -26,6 +26,8 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",
     "gulp-uglifycss": "^1.1.0",
+    "gulp-webserver": "^0.9.1",
     "run-sequence": "^2.2.1"
-  }
+  },
+  "dependencies": {}
 }
