@@ -32,7 +32,6 @@ gulp.task('scripts', ['concatScripts'], () => {
                 .pipe(gulp.dest('dist/scripts'))
 })
 
-//MORAJU MAPE U DIST!!!
 
 //Initializes css sourcemaps and compiles the sass to css
 gulp.task('compileSass', () => {
